@@ -1,0 +1,18 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const { port } = require('./config');
+
+const app = express();
+
+app.set('port', port);
+
+app.use(bodyParser.json());
+
+require('../api/routes/beer')(app);
+require('../api/routes/tank')(app);
+require('../api/routes/user')(app);
+require('../api/routes/production')(app);
+require('../api/routes/data')(app);
+require('../api/routes/activity')(app);
+
+module.exports = () => app;
