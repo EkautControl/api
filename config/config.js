@@ -6,4 +6,5 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = {
   port: process.env.PORT,
   mongoURL: process.env.MONGODB_URL,
+  rabbitmqURL: process.env.RABBITMQ_URL,
 };
