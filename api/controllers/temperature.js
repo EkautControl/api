@@ -19,20 +19,18 @@ module.exports = () => {
 
   controller.sensorTemperature = (msg) => {
     const temps = JSON.parse(msg);
-    console.log(temps);
     const tanks = Object.keys(temps);
 
-    tanks.forEach(async (tank) => {
+    const tempArray = tanks.map(async (tank) => {
       const prodId = await productionController.getProductionByTank(tank);
-      if (prodId) {
-        console.log(temps[tank]);
-        console.log(prodId);
-        await Temperature.create({
-          value: temps[tank],
-          productionId: prodId,
-        });
-      }
+      return { value: temps[tank], productionId: prodId };
     });
+
+    (async () => {
+      const temperatures = (await Promise.all(tempArray))
+        .filter((item) => item.productionId !== false);
+      await Temperature.insertMany(temperatures);
+    })();
   };
 
   return controller;
