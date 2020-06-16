@@ -17,5 +17,15 @@ module.exports = () => {
     }
   };
 
+  controller.getProductionByTank = async (tankNumber) => {
+    const production = await Production.find({ tank: tankNumber }, '_id', { sort: { created_at: -1 } });
+    if (production.length > 0) {
+      const idObj = production[0];
+      const prodId = idObj._id;
+      return prodId;
+    }
+    return false;
+  };
+
   return controller;
 };

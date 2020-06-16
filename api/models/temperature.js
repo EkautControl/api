@@ -2,20 +2,20 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const dataSchema = new Schema({
-  beerId: {
+const temperatureSchema = new Schema({
+  productionId: {
     type: mongoose.Types.ObjectId,
-    required: [true, 'Beer id required'],
+    required: [true, 'Production id required'],
   },
   creationDate: {
     type: Date,
     default: Date(),
     required: [true, 'Creation date required'],
   },
-  data: {
-    type: Object,
+  value: {
+    type: Number,
     required: [true, 'Data required'],
   },
 });
 
-module.exports = mongoose.model('data', dataSchema, 'data');
+module.exports = mongoose.model('temperature', temperatureSchema);
