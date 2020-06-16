@@ -7,7 +7,6 @@ openConn.then((connection) => connection.createChannel())
   .then((channel) => channel.assertQueue(queue)
     .then(() => channel.consume(queue, (msg) => {
       if (msg !== null) {
-        console.log(msg.content.toString());
         controller.sensorTemperature(msg.content.toString());
         channel.ack(msg);
       }

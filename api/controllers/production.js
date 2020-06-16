@@ -21,6 +21,7 @@ module.exports = () => {
     const production = await Production.find({ tank: tankNumber }, '_id', { sort: { created_at: -1 } });
     if (production.length > 0) {
       const idObj = production[0];
+      // eslint-disable-next-line no-underscore-dangle
       const prodId = idObj._id;
       return prodId;
     }
