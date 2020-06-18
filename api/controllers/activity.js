@@ -17,6 +17,7 @@ module.exports = () => {
         type: req.body.type,
         description: req.body.description,
         reporter: req.body.reporter,
+        date: req.body.date || null,
       };
       res.send(await Activity.create(activity));
     } catch (err) {

@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const activitySchema = new Schema({
   type: {
-    type: String,
+    type: Number,
     required: [true, 'Activity type required'],
   },
   description: {
