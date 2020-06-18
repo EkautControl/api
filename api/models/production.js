@@ -22,8 +22,13 @@ const productionSchema = new Schema({
     required: [true, 'Production batch required'],
   },
   phase: {
-    type: String,
+    type: Number,
     required: [true, 'Production phase required'],
+  },
+  hasProblem: {
+    type: Boolean,
+    default: false,
+    required: [true, 'Production problem required'],
   },
 });
 
