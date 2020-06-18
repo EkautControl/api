@@ -13,9 +13,9 @@ module.exports = () => {
 
   controller.getBeer = async (req, res) => {
     try {
-      const { beerId } = req.query;
-      if (!beerId) throw Error('Beer id is required');
-      res.send(await Beer.findById(beerId) || {});
+      const { id } = req.params;
+      if (!id) throw Error('Beer id is required');
+      res.send(await Beer.findById(id) || {});
     } catch (err) {
       res.status(500).send({ error: err.message });
     }

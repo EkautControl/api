@@ -7,9 +7,9 @@ module.exports = () => {
 
   controller.getLastData = async (req, res) => {
     try {
-      const { beerId } = req.query;
-      if (!beerId) throw Error('Beer id is required');
-      res.send(await Temperature.findOne({ beerId: ObjectId(beerId) }, {}, {
+      const productionId = req.params.id;
+      if (!productionId) throw Error('Production id is required');
+      res.send(await Temperature.findOne({ productionId: ObjectId(productionId) }, {}, {
         sort: { creationDate: -1 },
       }));
     } catch (err) {

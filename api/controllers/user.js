@@ -20,7 +20,7 @@ module.exports = () => {
 
   controller.getUser = async (req, res) => {
     try {
-      const { userId } = req.query;
+      const userId = req.params.id;
       res.send(await User.findById(userId));
     } catch (err) {
       res.status(500).send({ error: err.message });
