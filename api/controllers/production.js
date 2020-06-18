@@ -1,4 +1,6 @@
+const mongose = require('mongoose');
 const Production = require('../models/production');
+const Tank = require('../models/tank');
 
 module.exports = () => {
   const controller = {};
@@ -10,18 +12,21 @@ module.exports = () => {
         beerId: req.body.beerId,
         batch: req.body.batch,
         phase: req.body.phase,
+        date: req.body.date || null,
       };
-      res.send(await Production.create(production));
+      const productionObj = await Production.create(production);
+      const tank = await Tank.findOne({ tank: production.tank });
+      await tank.updateOne({ $set: { production: mongose.Types.ObjectId(productionObj._id) } });
+      res.send(productionObj);
     } catch (err) {
       res.status(500).send({ error: err.message });
     }
   };
 
-  controller.getProductionByTank = async (tankNumber) => {
+  controller.getProductionIdByTank = async (tankNumber) => {
     const production = await Production.find({ tank: tankNumber }, '_id', { sort: { created_at: -1 } });
     if (production.length > 0) {
       const idObj = production[0];
-      // eslint-disable-next-line no-underscore-dangle
       const prodId = idObj._id;
       return prodId;
     }
