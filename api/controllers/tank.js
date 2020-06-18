@@ -6,7 +6,7 @@ module.exports = () => {
   controller.listActiveTanks = async (req, res) => {
     try {
       const activeTanks = await Tank.aggregate([
-        { $match: { active: true } },
+        { $match: { production: { $ne: null } } },
         {
           $lookup: {
             from: 'productions',
@@ -40,7 +40,7 @@ module.exports = () => {
 
   controller.listInactiveTanks = async (req, res) => {
     try {
-      res.send(await Tank.find({ active: false }) || []);
+      res.send(await Tank.find({ production: null }) || []);
     } catch (err) {
       res.status(500).send({ error: err.message });
     }
