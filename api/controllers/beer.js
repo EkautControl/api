@@ -21,5 +21,19 @@ module.exports = () => {
     }
   };
 
+  controller.addBeer = async (req, res) => {
+    try {
+      const beer = {
+        name: req.body.name,
+        averageTime: req.body.averageTime,
+        brewery: req.body.brewery,
+        type: req.body.type,
+      };
+      res.send(await Beer.create(beer));
+    } catch (err) {
+      res.status(500).send({ error: err.message });
+    }
+  };
+
   return controller;
 };
