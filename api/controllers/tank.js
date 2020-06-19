@@ -29,6 +29,7 @@ module.exports = () => {
           $project: {
             'beer.targetValues': 0,
             'beer.active': 0,
+            volume: 0,
           },
         },
       ]);
