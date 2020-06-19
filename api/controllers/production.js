@@ -1,6 +1,26 @@
 const mongose = require('mongoose');
 const Production = require('../models/production');
 const Tank = require('../models/tank');
+const Beer = require('../models/beer');
+const EPhases = require('../enums/EPhases');
+
+const updateBeerStatus = async (id) => {
+  await Beer.findByIdAndUpdate(
+    { _id: id }, { $set: { active: false } }, { useFindAndModify: false, new: true },
+  );
+};
+
+const updateTankStatus = async (tank) => {
+  await Tank.findOneAndUpdate(
+    { tank }, { $unset: { production: "" } }, { useFindAndModify: false, new: true },
+  );
+};
+
+const setProductionEndDate = async (id) => {
+  await Production.findByIdAndUpdate(
+    { _id: id }, { $set: { endDate: new Date() } }, { useFindAndModify: false, new: true },
+  );
+};
 
 module.exports = () => {
   const controller = {};
@@ -80,9 +100,15 @@ module.exports = () => {
     try {
       const productionId = req.params.id;
       const { phase } = req.body;
-      res.status(200).send(await Production.findByIdAndUpdate(
+      const production = await Production.findByIdAndUpdate(
         { _id: productionId }, { $set: { phase } }, { useFindAndModify: false, new: true },
-      ));
+      );
+      if (phase === EPhases.FINALIZADO) {
+        updateBeerStatus(production.beerId);
+        updateTankStatus(production.tank);
+        setProductionEndDate(productionId);
+      }
+      res.status(200).send(production);
     } catch (err) {
       res.status(500).send({ error: err.message });
     }
