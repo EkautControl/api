@@ -16,8 +16,15 @@ module.exports = () => {
       };
       const productionObj = await Production.create(production);
       const tank = await Tank.findOne({ tank: production.tank });
+      const beer = await Beer.findOne({ _id: production.beerId });
       await tank.updateOne({ $set: { production: mongose.Types.ObjectId(productionObj._id) } });
-      res.send(productionObj);
+      await beer.updateOne({ $set: { active: true } });
+      res.send({
+        _id: tank._id,
+        tank: tank.tank,
+        production: productionObj,
+        beer,
+      });
     } catch (err) {
       res.status(500).send({ error: err.message });
     }
