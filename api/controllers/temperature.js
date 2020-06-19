@@ -22,7 +22,7 @@ module.exports = () => {
     const tanks = Object.keys(temps);
 
     const tempArray = tanks.map(async (tank) => {
-      const prodId = await productionController.getProductionByTank(tank);
+      const prodId = await productionController.getProductionIdByTank(tank);
       return { value: temps[tank], productionId: prodId };
     });
 
