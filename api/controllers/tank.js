@@ -32,7 +32,7 @@ module.exports = () => {
             volume: 0,
           },
         },
-      ]);
+      ]).sort({ tank: 1 });
       res.status(200).send(activeTanks);
     } catch (err) {
       res.status(500).send({ error: err });
