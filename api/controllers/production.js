@@ -5,11 +5,18 @@ const Beer = require("../models/beer");
 const EPhases = require("../enums/EPhases");
 
 const updateBeerStatus = async (id) => {
-  await Beer.findByIdAndUpdate(
-    { _id: id },
-    { $set: { active: false } },
-    { useFindAndModify: false, new: true }
-  );
+  const beer = await Production.find({
+    beerId: id,
+    endDate: { $exists: false },
+  });
+
+  if (beer.length === 1) {
+    await Beer.findByIdAndUpdate(
+      { _id: id },
+      { $set: { active: false } },
+      { useFindAndModify: false, new: true }
+    );
+  }
 };
 
 const updateTankStatus = async (tank) => {
