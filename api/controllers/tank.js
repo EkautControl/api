@@ -41,7 +41,7 @@ module.exports = () => {
 
   controller.listInactiveTanks = async (req, res) => {
     try {
-      res.send(await Tank.find({ production: null }) || []);
+      res.send((await Tank.find({ production: null }).sort({ tank: 1 })) || []);
     } catch (err) {
       res.status(500).send({ error: err.message });
     }
