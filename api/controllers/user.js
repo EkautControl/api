@@ -8,7 +8,6 @@ module.exports = () => {
       const user = {
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
         phone: req.body.phone,
         notificationType: req.body.notificationType,
       };
@@ -20,8 +19,8 @@ module.exports = () => {
 
   controller.getUser = async (req, res) => {
     try {
-      const userId = req.params.id;
-      res.send(await User.findById(userId));
+      const userEmail = req.params.email;
+      res.send(await User.findOne({ email: userEmail }));
     } catch (err) {
       res.status(500).send({ error: err.message });
     }
@@ -33,7 +32,6 @@ module.exports = () => {
       const userInfo = {
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
         phone: req.body.phone,
         notificationType: req.body.notificationType,
       };
@@ -41,7 +39,6 @@ module.exports = () => {
       const result = await User.replaceOne({ _id: userId }, {
         name: userInfo.name,
         email: userInfo.email,
-        password: userInfo.password,
         phone: userInfo.phone,
         notificationType: userInfo.notificationType,
       });
