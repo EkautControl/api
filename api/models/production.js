@@ -13,7 +13,7 @@ const productionSchema = new Schema({
   },
   startDate: {
     type: Date,
-    default: Date(),
+    default: Date,
     required: [true, 'Production start date required'],
   },
   endDate: { type: Date },
