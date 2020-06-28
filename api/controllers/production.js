@@ -51,7 +51,7 @@ module.exports = () => {
         ferment: req.body.ferment,
         leaven: req.body.leaven,
         generation: req.body.generation,
-        startDate: Date(req.body.date),
+        startDate: req.body.date,
       };
       const productionObj = await Production.create(production);
       const tank = await Tank.findOne({ tank: production.tank });
@@ -60,7 +60,7 @@ module.exports = () => {
         type: EActivityType.TANQUE,
         title: `Nova produção adicionada ao Tanque ${tank.tank}`,
         description: `Lote ${productionObj.batch} - Cerveja: ${beer.name}`,
-        creationDate: Date(production.startDate),
+        creationDate: productionObj.startDate,
         reporter,
       };
       await tank.updateOne({
@@ -143,7 +143,7 @@ module.exports = () => {
         description: `Fase atual: ${EPhases.properties[production.phase].label} | Lote ${
           production.batch
         } - Cerveja: ${beer.name}`,
-        creationDate: Date(production.startDate),
+        creationDate: production.startDate,
         reporter,
       };
       if (phase === EPhases.FINALIZADO) {
