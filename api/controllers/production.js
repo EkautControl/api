@@ -60,7 +60,7 @@ module.exports = () => {
         type: EActivityType.TANQUE,
         title: `Nova produção adicionada ao Tanque ${tank.tank}`,
         description: `Lote ${productionObj.batch} - Cerveja: ${beer.name}`,
-        creationDate: productionObj.startDate
+        creationDate: productionObj.startDate,
         reporter,
       };
       await tank.updateOne({
