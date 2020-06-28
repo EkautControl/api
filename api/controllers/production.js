@@ -48,7 +48,10 @@ module.exports = () => {
         beerId: req.body.beerId,
         batch: req.body.batch,
         phase: req.body.phase,
-        date: req.body.date || null,
+        ferment: req.body.ferment,
+        leaven: req.body.leaven,
+        generation: req.body.generation,
+        startDate: req.body.date || null,
       };
       const productionObj = await Production.create(production);
       const tank = await Tank.findOne({ tank: production.tank });
