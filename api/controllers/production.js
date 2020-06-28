@@ -51,7 +51,7 @@ module.exports = () => {
         ferment: req.body.ferment,
         leaven: req.body.leaven,
         generation: req.body.generation,
-        startDate: Date(req.body.date),
+        startDate: req.body.date,
       };
       const productionObj = await Production.create(production);
       const tank = await Tank.findOne({ tank: production.tank });
