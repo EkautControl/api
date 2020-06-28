@@ -35,7 +35,7 @@ module.exports = () => {
         type: EActivityType.CERVEJA,
         title: `Nova cerveja adicionada: ${beer.name}`,
         description: `Cerveja ${beer.name} da cervejaria ${beer.brewery} adicionada à lista de cervejas.`,
-        date: new Date(),
+        creationDate: new Date(),
         reporter: req.body.reporter,
       };
       await Activity.create(activity);
