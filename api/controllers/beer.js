@@ -1,6 +1,6 @@
-const Beer = require("../models/beer");
-const Activity = require("../models/activity");
-const EActivityType = require("../enums/EActivityType");
+const Beer = require('../models/beer');
+const Activity = require('../models/activity');
+const EActivityType = require('../enums/EActivityType');
 
 module.exports = () => {
   const controller = {};
@@ -16,7 +16,7 @@ module.exports = () => {
   controller.getBeer = async (req, res) => {
     try {
       const { id } = req.params;
-      if (!id) throw Error("Beer id is required");
+      if (!id) throw Error('Beer id is required');
       res.send((await Beer.findById(id)) || {});
     } catch (err) {
       res.status(500).send({ error: err.message });

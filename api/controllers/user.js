@@ -36,12 +36,15 @@ module.exports = () => {
         notificationType: req.body.notificationType,
       };
 
-      const result = await User.replaceOne({ _id: userId }, {
-        name: userInfo.name,
-        email: userInfo.email,
-        phone: userInfo.phone,
-        notificationType: userInfo.notificationType,
-      });
+      const result = await User.replaceOne(
+        { _id: userId },
+        {
+          name: userInfo.name,
+          email: userInfo.email,
+          phone: userInfo.phone,
+          notificationType: userInfo.notificationType,
+        }
+      );
       res.status(200).send(result);
     } catch (err) {
       res.status(500).send({ error: err.message });
