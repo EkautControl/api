@@ -30,6 +30,18 @@ const productionSchema = new Schema({
     default: false,
     required: [true, 'Production problem required'],
   },
+  ferment: {
+    type: String,
+    required: [true, 'Ferment required'],
+  },
+  leaven: {
+    type: String,
+    required: [true, 'Leaven required'],
+  },
+  generation: {
+    type: String,
+    required: [true, 'Generation required'],
+  },
 });
 
 module.exports = mongoose.model('productions', productionSchema);
