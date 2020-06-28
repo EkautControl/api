@@ -60,7 +60,7 @@ module.exports = () => {
         type: EActivityType.TANQUE,
         title: `Nova produção adicionada ao Tanque ${tank.tank}`,
         description: `Lote ${productionObj.batch} - Cerveja: ${beer.name}`,
-        creationDate: Date(production.date),
+        creationDate: Date(production.startDate),
         reporter,
       };
       await tank.updateOne({
@@ -143,7 +143,7 @@ module.exports = () => {
         description: `Fase atual: ${EPhases.properties[production.phase].label} | Lote ${
           production.batch
         } - Cerveja: ${beer.name}`,
-        creationDate: Date(production.date),
+        creationDate: Date(production.startDate),
         reporter,
       };
       if (phase === EPhases.FINALIZADO) {
