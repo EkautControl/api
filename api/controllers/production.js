@@ -1,8 +1,10 @@
-const mongose = require("mongoose");
-const Production = require("../models/production");
-const Tank = require("../models/tank");
-const Beer = require("../models/beer");
-const EPhases = require("../enums/EPhases");
+const mongose = require('mongoose');
+const Production = require('../models/production');
+const Tank = require('../models/tank');
+const Beer = require('../models/beer');
+const Activity = require('../models/activity');
+const EPhases = require('../enums/EPhases');
+const EActivityType = require('../enums/EActivityType');
 
 const updateBeerStatus = async (id) => {
   const beer = await Production.find({
@@ -22,7 +24,7 @@ const updateBeerStatus = async (id) => {
 const updateTankStatus = async (tank) => {
   await Tank.findOneAndUpdate(
     { tank },
-    { $unset: { production: "" } },
+    { $unset: { production: '' } },
     { useFindAndModify: false, new: true }
   );
 };
@@ -40,6 +42,7 @@ module.exports = () => {
 
   controller.addProduction = async (req, res) => {
     try {
+      const { reporter } = req.body;
       const production = {
         tank: req.body.tank,
         beerId: req.body.beerId,
@@ -50,10 +53,18 @@ module.exports = () => {
       const productionObj = await Production.create(production);
       const tank = await Tank.findOne({ tank: production.tank });
       const beer = await Beer.findById(production.beerId);
+      const activity = {
+        type: EActivityType.TANQUE,
+        title: `Nova produção adicionada ao Tanque ${tank.tank}`,
+        description: `Lote ${productionObj.batch} - Cerveja: ${beer.name}`,
+        date: Date(production.date),
+        reporter,
+      };
       await tank.updateOne({
         $set: { production: mongose.Types.ObjectId(productionObj._id) },
       });
       await beer.updateOne({ $set: { active: true } });
+      await Activity.create(activity);
       res.send({
         _id: tank._id,
         tank: tank.tank,
@@ -66,7 +77,7 @@ module.exports = () => {
   };
 
   controller.getProductionIdByTank = async (tankNumber) => {
-    const production = await Production.find({ tank: tankNumber }, "_id", {
+    const production = await Production.find({ tank: tankNumber }, '_id', {
       sort: { created_at: -1 },
     });
     if (production.length > 0) {
@@ -84,26 +95,26 @@ module.exports = () => {
         { $match: { tank } },
         {
           $lookup: {
-            from: "productions",
-            localField: "production",
-            foreignField: "_id",
-            as: "production",
+            from: 'productions',
+            localField: 'production',
+            foreignField: '_id',
+            as: 'production',
           },
         },
-        { $unwind: "$production" },
+        { $unwind: '$production' },
         {
           $lookup: {
-            from: "beers",
-            localField: "production.beerId",
-            foreignField: "_id",
-            as: "beer",
+            from: 'beers',
+            localField: 'production.beerId',
+            foreignField: '_id',
+            as: 'beer',
           },
         },
-        { $unwind: "$beer" },
+        { $unwind: '$beer' },
         {
           $project: {
-            "beer.targetValues": 0,
-            "beer.active": 0,
+            'beer.targetValues': 0,
+            'beer.active': 0,
           },
         },
       ]);
@@ -116,17 +127,28 @@ module.exports = () => {
   controller.updateProductionPhase = async (req, res) => {
     try {
       const productionId = req.params.id;
-      const { phase } = req.body;
+      const { phase, reporter } = req.body;
       const production = await Production.findByIdAndUpdate(
         { _id: productionId },
         { $set: { phase } },
         { useFindAndModify: false, new: true }
       );
+      const beer = await Beer.findById(production.beerId);
+      const activity = {
+        type: EActivityType.TANQUE,
+        title: `Mudança de fase de produção do Tanque ${production.tank}`,
+        description: `Fase atual: ${EPhases.properties[production.phase].label} | Lote ${
+          production.batch
+        } - Cerveja: ${beer.name}`,
+        date: Date(production.date),
+        reporter,
+      };
       if (phase === EPhases.FINALIZADO) {
         updateBeerStatus(production.beerId);
         updateTankStatus(production.tank);
         setProductionEndDate(productionId);
       }
+      await Activity.create(activity);
       res.status(200).send(production);
     } catch (err) {
       res.status(500).send({ error: err.message });
