@@ -9,9 +9,15 @@ module.exports = () => {
     try {
       const productionId = req.params.id;
       if (!productionId) throw Error('Production id is required');
-      res.send(await Temperature.findOne({ productionId: ObjectId(productionId) }, {}, {
-        sort: { creationDate: -1 },
-      }));
+      res.send(
+        await Temperature.findOne(
+          { productionId: ObjectId(productionId) },
+          {},
+          {
+            sort: { creationDate: -1 },
+          }
+        )
+      );
     } catch (err) {
       res.status(500).send({ error: err.message });
     }
@@ -27,8 +33,9 @@ module.exports = () => {
     });
 
     (async () => {
-      const temperatures = (await Promise.all(tempArray))
-        .filter((item) => item.productionId !== false);
+      const temperatures = (await Promise.all(tempArray)).filter(
+        (item) => item.productionId !== false
+      );
       await Temperature.insertMany(temperatures);
     })();
   };

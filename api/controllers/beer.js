@@ -1,4 +1,6 @@
 const Beer = require('../models/beer');
+const Activity = require('../models/activity');
+const EActivityType = require('../enums/EActivityType');
 
 module.exports = () => {
   const controller = {};
@@ -15,7 +17,7 @@ module.exports = () => {
     try {
       const { id } = req.params;
       if (!id) throw Error('Beer id is required');
-      res.send(await Beer.findById(id) || {});
+      res.send((await Beer.findById(id)) || {});
     } catch (err) {
       res.status(500).send({ error: err.message });
     }
@@ -29,6 +31,14 @@ module.exports = () => {
         brewery: req.body.brewery,
         type: req.body.type,
       };
+      const activity = {
+        type: EActivityType.CERVEJA,
+        title: `Nova cerveja adicionada: ${beer.name}`,
+        description: `Cerveja ${beer.name} da cervejaria ${beer.brewery} adicionada à lista de cervejas.`,
+        creationDate: new Date(),
+        reporter: req.body.reporter,
+      };
+      await Activity.create(activity);
       res.send(await Beer.create(beer));
     } catch (err) {
       res.status(500).send({ error: err.message });
