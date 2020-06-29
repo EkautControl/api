@@ -23,6 +23,15 @@ module.exports = () => {
     }
   };
 
+  controller.getBeerById = async (id) => {
+    try {
+      const beer = await Beer.findById(id, 'name averageTime type');
+      return beer;
+    } catch (err) {
+      return false;
+    }
+  };
+
   controller.addBeer = async (req, res) => {
     try {
       const beer = {

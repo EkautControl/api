@@ -14,7 +14,7 @@ module.exports = () => {
     const publishPromise = snsClient.publish(params).promise();
 
     publishPromise.then((data) => {
-      console.log(`Message ${params.Message} send sent to the topic ${params.TopicArn}`);
+      console.log(`Message ${params.Message} sent to the topic ${params.TopicArn}`);
       console.log(`MessageID is ${data.MessageId}`);
     }).catch((err) =>{
       console.error(err, err.stack);

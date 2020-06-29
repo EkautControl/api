@@ -79,14 +79,14 @@ module.exports = () => {
     }
   };
 
-  controller.getProductionIdByTank = async (tankNumber) => {
-    const production = await Production.find({ tank: tankNumber }, '_id', {
-      sort: { created_at: -1 },
-    });
+  controller.getProductionDataByTank = async (tankNumber) => {
+    const production = await Production.find(
+      { tank: tankNumber, endDate: { $exists: false } },
+      '_id beerId batch startDate',
+      { sort: { created_at: -1 } });
     if (production.length > 0) {
       const idObj = production[0];
-      const prodId = idObj._id;
-      return prodId;
+      return idObj;
     }
     return false;
   };
@@ -157,6 +157,17 @@ module.exports = () => {
       res.status(500).send({ error: err.message });
     }
   };
+
+  controller.updateProductionHasProblem = async (productionId, hasProblemStatus) => {
+    try {
+      await Production.findByIdAndUpdate(
+        productionId,
+        { hasProblem: hasProblemStatus }
+      )
+    } catch (err) {
+      return err;
+    }
+  }
 
   return controller;
 };
