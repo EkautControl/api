@@ -52,7 +52,7 @@ module.exports = () => {
         leaven: req.body.leaven,
         generation: req.body.generation,
         startDate: req.body.date,
-        data: [],
+        data: [{ data: [] }],
       };
       const productionObj = await Production.create(production);
       const tank = await Tank.findOne({ tank: production.tank });
