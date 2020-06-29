@@ -183,5 +183,17 @@ module.exports = () => {
     }
   };
 
+  controller.deleteProduction = async (req, res) => {
+    try {
+      const productionId = req.params.id;
+      const production = await Production.findByIdAndDelete(productionId);
+      updateBeerStatus(production.beerId);
+      updateTankStatus(production.tank);
+      res.send('Deleted.');
+    } catch (err) {
+      res.status(500).send({ error: err });
+    }
+  };
+
   return controller;
 };

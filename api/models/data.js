@@ -11,15 +11,11 @@ const dataValueSchema = new Schema({
 const dataSchema = new Schema({
   data: { type: [dataValueSchema] },
   analysis: { type: String },
-  phase: { type: Number, required: [true, 'Phase required'] },
-  reporter: {
-    type: String,
-    required: [true, 'Reporter name required'],
-  },
+  phase: { type: Number },
+  reporter: { type: String },
   creationDate: {
     type: Date,
     default: Date,
-    required: [true, 'Creation date required'],
   },
 });
 
