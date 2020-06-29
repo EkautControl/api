@@ -51,7 +51,7 @@ module.exports = () => {
         ferment: req.body.ferment,
         leaven: req.body.leaven,
         generation: req.body.generation,
-        startDate: req.body.date || null,
+        startDate: req.body.date,
       };
       const productionObj = await Production.create(production);
       const tank = await Tank.findOne({ tank: production.tank });
@@ -60,7 +60,7 @@ module.exports = () => {
         type: EActivityType.TANQUE,
         title: `Nova produção adicionada ao Tanque ${tank.tank}`,
         description: `Lote ${productionObj.batch} - Cerveja: ${beer.name}`,
-        creationDate: production.date,
+        creationDate: productionObj.startDate,
         reporter,
       };
       await tank.updateOne({
@@ -143,7 +143,7 @@ module.exports = () => {
         description: `Fase atual: ${EPhases.properties[production.phase].label} | Lote ${
           production.batch
         } - Cerveja: ${beer.name}`,
-        creationDate: production.date,
+        creationDate: production.startDate,
         reporter,
       };
       if (phase === EPhases.FINALIZADO) {
@@ -163,11 +163,47 @@ module.exports = () => {
       await Production.findByIdAndUpdate(
         productionId,
         { hasProblem: hasProblemStatus }
-      )
+      );
     } catch (err) {
       return err;
     }
-  }
+  };
+  
+  controller.addProductionData = async (req, res) => {
+    try {
+      const productionId = req.params.id;
+      const data = {
+        data: req.body.data,
+        analysis: req.body.analysis,
+        phase: req.body.phase,
+        reporter: req.body.reporter,
+        creationDate: Date(req.body.date),
+      };
+      res.send(
+        await Production.findByIdAndUpdate(
+          productionId,
+          {
+            $push: { data },
+          },
+          { useFindAndModify: false, new: true }
+        )
+      );
+    } catch (err) {
+      res.status(500).send({ error: err });
+    }
+  };
+
+  controller.deleteProduction = async (req, res) => {
+    try {
+      const productionId = req.params.id;
+      const production = await Production.findByIdAndDelete(productionId);
+      updateBeerStatus(production.beerId);
+      updateTankStatus(production.tank);
+      res.send('Deleted.');
+    } catch (err) {
+      res.status(500).send({ error: err });
+    }
+  };
 
   return controller;
 };

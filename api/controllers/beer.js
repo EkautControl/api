@@ -1,5 +1,6 @@
 const Beer = require('../models/beer');
 const Activity = require('../models/activity');
+const Production = require('../models/production');
 const EActivityType = require('../enums/EActivityType');
 
 module.exports = () => {
@@ -52,6 +53,14 @@ module.exports = () => {
     } catch (err) {
       res.status(500).send({ error: err.message });
     }
+  };
+
+  controller.getProductionsByBeerId = async (req, res) => {
+    const { id } = req.params;
+    const productions = await Production.find({ beerId: id }, 'data', {
+      sort: { created_at: -1 },
+    });
+    res.send(productions);
   };
 
   return controller;
