@@ -158,5 +158,29 @@ module.exports = () => {
     }
   };
 
+  controller.addProductionData = async (req, res) => {
+    try {
+      const productionId = req.params.id;
+      const data = {
+        data: req.body.data,
+        analysis: req.body.analysis,
+        phase: req.body.phase,
+        reporter: req.body.reporter,
+        creationDate: Date(req.body.date),
+      };
+      res.send(
+        await Production.findByIdAndUpdate(
+          productionId,
+          {
+            $push: { data },
+          },
+          { useFindAndModify: false, new: true }
+        )
+      );
+    } catch (err) {
+      res.status(500).send({ error: err });
+    }
+  };
+
   return controller;
 };

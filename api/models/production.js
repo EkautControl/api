@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const dataSchema = require('./data.js');
 
 const { Schema } = mongoose;
 
@@ -41,6 +42,9 @@ const productionSchema = new Schema({
   generation: {
     type: String,
     required: [true, 'Generation required'],
+  },
+  data: {
+    type: [dataSchema],
   },
 });
 
