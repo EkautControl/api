@@ -9,8 +9,8 @@ const getIdealTemperature = (beerType, averageTime, productionStartDate) => {
   const startDate = new Date(productionStartDate);
   const todayDate = new Date();
   const diffDays = Math.ceil((todayDate - startDate) / (1000 * 3600 * 24));
-  console.log(diffDays);
   const productionCompletion = (diffDays / averageTime) * 100;
+
   let idealTemperature;
   if (productionCompletion > 70) {
     idealTemperature = EBeerTypes.properties[beerType].laterTemp;
@@ -61,9 +61,7 @@ module.exports = () => {
         const tankTemperature = temps[tank];
         productionData.temperatureValue = tankTemperature;
         const beerData = await beerController.getBeerById(productionData.beerId);
-        console.log(tankTemperature);
         const idealTemperature = getIdealTemperature(beerData.type, beerData.averageTime, productionData.startDate);
-        console.log(verifyTemperature(idealTemperature, tankTemperature));
         if (!verifyTemperature(idealTemperature, tankTemperature)) {
           const alertMessage = `Temperatura fora do ideal |
             Valor medido - ideal : ${tankTemperature}°C - ${idealTemperature}°C |
