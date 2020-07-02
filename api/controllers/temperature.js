@@ -10,13 +10,13 @@ module.exports = () => {
       const productionId = req.params.id;
       if (!productionId) throw Error('Production id is required');
       res.send(
-        await Temperature.findOne(
+        await Temperature.find(
           { productionId: ObjectId(productionId) },
           {},
           {
             sort: { creationDate: -1 },
           }
-        )
+        ).limit(3)
       );
     } catch (err) {
       res.status(500).send({ error: err.message });
