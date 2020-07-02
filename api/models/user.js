@@ -19,6 +19,12 @@ const userSchema = new Schema({
     type: String,
     required: [true, 'Notification type required'],
   },
+  notificationEmail: {
+    type: String,
+  },
+  subscriptionArn: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model('users', userSchema);

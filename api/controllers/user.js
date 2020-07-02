@@ -28,16 +28,18 @@ module.exports = () => {
 
   controller.updateUser = async (req, res) => {
     try {
-      const userId = req.params.id;
+      const userEmail = req.params.email;
       const userInfo = {
         name: req.body.name,
-        email: req.body.email,
+        email: req.params.email,
         phone: req.body.phone,
         notificationType: req.body.notificationType,
+        notificationEmail: req.body.notificationEmail,
+        subscriptionArn: req.body.subscriptionArn,
       };
 
       const result = await User.replaceOne(
-        { _id: userId },
+        { email: userEmail },
         {
           name: userInfo.name,
           email: userInfo.email,
