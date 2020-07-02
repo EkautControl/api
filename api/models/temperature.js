@@ -9,7 +9,7 @@ const temperatureSchema = new Schema({
   },
   creationDate: {
     type: Date,
-    default: Date(),
+    default: new Date(),
     required: [true, 'Creation date required'],
   },
   value: {
