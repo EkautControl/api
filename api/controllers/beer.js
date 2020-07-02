@@ -48,7 +48,7 @@ module.exports = () => {
 
   controller.getProductionsByBeerId = async (req, res) => {
     const { id } = req.params;
-    const productions = await Production.find({ beerId: id }, 'data', {
+    const productions = await Production.find({ beerId: id }, '', {
       sort: { created_at: -1 },
     });
     res.send(productions);
