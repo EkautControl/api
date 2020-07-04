@@ -21,5 +21,35 @@ module.exports = () => {
     });
   };
 
+  notificationAgent.unsubscribe = (subscriptionArn) => {
+    const params = {
+      SubscriptionArn: subscriptionArn,
+    };
+    const unsubscribePromise = snsClient.unsubscribe(params).promise();
+
+    unsubscribePromise.then((data) => {
+      console.log(data);
+    }).catch((err) => {
+      console.error(err);
+    });
+  };
+
+  notificationAgent.subscribe = async (subscriptionData) => {
+    const params = {
+      Protocol: subscriptionData.notificationType,
+      TopicArn: snsTopicArn,
+      ReturnSubscriptionArn: true,
+    };
+
+    if (subscriptionData.notificationType === 'SMS') {
+      params.Endpoint = subscriptionData.phone;
+    } else {
+      params.Endpoint = subscriptionData.email;
+    }
+    const subscriptionResponse = await snsClient.subscribe(params).promise();
+
+    return subscriptionResponse;
+  };
+
   return notificationAgent;
 };

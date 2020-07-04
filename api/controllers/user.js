@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const notificationAgent = require('../../services/notifications')();
 
 module.exports = () => {
   const controller = {};
@@ -31,23 +32,33 @@ module.exports = () => {
       const userEmail = req.params.email;
       const userInfo = {
         name: req.body.name,
-        email: req.params.email,
+        email: userEmail,
         phone: req.body.phone,
         notificationType: req.body.notificationType,
         notificationEmail: req.body.notificationEmail,
         subscriptionArn: req.body.subscriptionArn,
       };
 
-      const result = await User.replaceOne(
-        { email: userEmail },
-        {
-          name: userInfo.name,
-          email: userInfo.email,
-          phone: userInfo.phone,
-          notificationType: userInfo.notificationType,
-        }
-      );
-      res.status(200).send(result);
+      console.log(userInfo);
+
+      // notificationAgent.unsubscribe(userInfo.subscriptionArn);
+
+      // const response = notificationAgent.subscribe({
+      //   notificationType: userInfo.notificationType.toLowerCase(),
+      //   email: userInfo.notificationEmail,
+      // });
+      // console.log(response);
+
+      // const result = await User.replaceOne(
+      //   { email: userEmail },
+      //   {
+      //     name: userInfo.name,
+      //     email: userInfo.email,
+      //     phone: userInfo.phone,
+      //     notificationType: userInfo.notificationType,
+      //   }
+      // );
+      res.status(200).send(userInfo);
     } catch (err) {
       res.status(500).send({ error: err.message });
     }
