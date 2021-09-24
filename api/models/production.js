@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const dataSchema = require('./data.js');
 
 const { Schema } = mongoose;
 
@@ -13,7 +14,7 @@ const productionSchema = new Schema({
   },
   startDate: {
     type: Date,
-    default: Date(),
+    default: Date,
     required: [true, 'Production start date required'],
   },
   endDate: { type: Date },
@@ -22,8 +23,28 @@ const productionSchema = new Schema({
     required: [true, 'Production batch required'],
   },
   phase: {
-    type: String,
+    type: Number,
     required: [true, 'Production phase required'],
+  },
+  hasProblem: {
+    type: Boolean,
+    default: false,
+    required: [true, 'Production problem required'],
+  },
+  ferment: {
+    type: String,
+    required: [true, 'Ferment required'],
+  },
+  leaven: {
+    type: String,
+    required: [true, 'Leaven required'],
+  },
+  generation: {
+    type: String,
+    required: [true, 'Generation required'],
+  },
+  data: {
+    type: [dataSchema],
   },
 });
 

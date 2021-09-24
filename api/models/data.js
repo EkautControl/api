@@ -1,21 +1,22 @@
 const mongoose = require('mongoose');
+// const dataValue = require('./dataValue');
 
 const { Schema } = mongoose;
 
+const dataValueSchema = new Schema({
+  type: { type: Number },
+  value: { type: Number },
+});
+
 const dataSchema = new Schema({
-  beerId: {
-    type: mongoose.Types.ObjectId,
-    required: [true, 'Beer id required'],
-  },
+  data: { type: [dataValueSchema] },
+  analysis: { type: String },
+  phase: { type: Number },
+  reporter: { type: String },
   creationDate: {
     type: Date,
-    default: Date(),
-    required: [true, 'Creation date required'],
-  },
-  data: {
-    type: Object,
-    required: [true, 'Data required'],
+    default: Date,
   },
 });
 
-module.exports = mongoose.model('data', dataSchema, 'data');
+module.exports = dataSchema;

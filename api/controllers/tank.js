@@ -6,7 +6,7 @@ module.exports = () => {
   controller.listActiveTanks = async (req, res) => {
     try {
       const activeTanks = await Tank.aggregate([
-        { $match: { active: true } },
+        { $match: { production: { $ne: null } } },
         {
           $lookup: {
             from: 'productions',
@@ -29,9 +29,10 @@ module.exports = () => {
           $project: {
             'beer.targetValues': 0,
             'beer.active': 0,
+            volume: 0,
           },
         },
-      ]);
+      ]).sort({ tank: 1 });
       res.status(200).send(activeTanks);
     } catch (err) {
       res.status(500).send({ error: err });
@@ -40,7 +41,7 @@ module.exports = () => {
 
   controller.listInactiveTanks = async (req, res) => {
     try {
-      res.send(await Tank.find({ active: false }) || []);
+      res.send((await Tank.find({ production: null }).sort({ tank: 1 })) || []);
     } catch (err) {
       res.status(500).send({ error: err.message });
     }

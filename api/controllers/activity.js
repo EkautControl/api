@@ -15,8 +15,10 @@ module.exports = () => {
     try {
       const activity = {
         type: req.body.type,
+        title: req.body.title,
         description: req.body.description,
         reporter: req.body.reporter,
+        creationDate: Date(req.body.date),
       };
       res.send(await Activity.create(activity));
     } catch (err) {

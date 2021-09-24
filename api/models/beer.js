@@ -20,9 +20,9 @@ const beerSchema = new Schema({
     type: String,
     required: [true, 'Brewery name required'],
   },
-  targetValues: {
-    type: Array,
-    required: [true, 'Base values required'],
+  type: {
+    type: Number,
+    required: [true, 'Beer type required'],
   },
 });
 
